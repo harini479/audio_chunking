@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Upload large recordings and split them into 20-minute chunks with 2-minute overlap. Manage, preview and download your audio/video chunks.">
+  <title>Recording Chunker — Split & Manage Audio/Video</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Background animated gradient -->
+  <div class="bg-gradient"></div>
+
+  <!-- Main Container -->
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header" id="app-header">
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <rect x="2" y="8" width="4" height="16" rx="2" fill="url(#g1)"><animate attributeName="height" values="16;10;16" dur="1.2s" repeatCount="indefinite"/><animate attributeName="y" values="8;11;8" dur="1.2s" repeatCount="indefinite"/></rect>
+              <rect x="9" y="4" width="4" height="24" rx="2" fill="url(#g1)"><animate attributeName="height" values="24;14;24" dur="1.2s" begin="0.15s" repeatCount="indefinite"/><animate attributeName="y" values="4;9;4" dur="1.2s" begin="0.15s" repeatCount="indefinite"/></rect>
+              <rect x="16" y="6" width="4" height="20" rx="2" fill="url(#g1)"><animate attributeName="height" values="20;8;20" dur="1.2s" begin="0.3s" repeatCount="indefinite"/><animate attributeName="y" values="6;12;6" dur="1.2s" begin="0.3s" repeatCount="indefinite"/></rect>
+              <rect x="23" y="9" width="4" height="14" rx="2" fill="url(#g1)"><animate attributeName="height" values="14;20;14" dur="1.2s" begin="0.45s" repeatCount="indefinite"/><animate attributeName="y" values="9;6;9" dur="1.2s" begin="0.45s" repeatCount="indefinite"/></rect>
+              <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="32"><stop stop-color="#a855f7"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+            </svg>
+          </div>
+          <h1>Recording Chunker</h1>
+        </div>
+        <p class="tagline">Split large recordings into manageable chunks</p>
+      </div>
+    </header>
+
+    <!-- Upload Section -->
+    <section class="upload-section" id="upload-section">
+      <div class="upload-card glass-card">
+        <div class="upload-dropzone" id="upload-dropzone">
+          <div class="dropzone-content">
+            <div class="upload-icon">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                <path d="M24 32V12M24 12L16 20M24 12L32 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 32V36C8 38.2091 9.79086 40 12 40H36C38.2091 40 40 38.2091 40 36V32" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h2>Drop your recording here</h2>
+            <p>or click to browse files</p>
+            <p class="upload-hint">Supports MP3, WAV, M4A, MP4, WEBM, MOV • Max 2GB</p>
+          </div>
+          <input type="file" id="file-input" accept="audio/*,video/*" hidden>
+        </div>
+
+        <!-- Upload Progress (hidden by default) -->
+        <div class="upload-progress" id="upload-progress" style="display: none;">
+          <div class="progress-info">
+            <span class="progress-filename" id="progress-filename"></span>
+            <span class="progress-percent" id="progress-percent">0%</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progress-bar-fill"></div>
+          </div>
+          <p class="progress-status" id="progress-status">Uploading...</p>
+        </div>
+      </div>
+
+      <!-- Chunk Config Info -->
+      <div class="config-info glass-card">
+        <div class="config-item">
+          <span class="config-label">Chunk Duration</span>
+          <span class="config-value">20 min</span>
+        </div>
+        <div class="config-divider"></div>
+        <div class="config-item">
+          <span class="config-label">Overlap</span>
+          <span class="config-value">2 min</span>
+        </div>
+        <div class="config-divider"></div>
+        <div class="config-item">
+          <span class="config-label">Stride</span>
+          <span class="config-value">18 min</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recordings Gallery -->
+    <section class="recordings-section" id="recordings-section">
+      <div class="section-header">
+        <h2>Your Recordings</h2>
+        <button class="btn-refresh" id="btn-refresh" title="Refresh">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Loading spinner -->
+      <div class="loading-spinner" id="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading recordings...</p>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="empty-state" style="display: none;">
+        <div class="empty-icon">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+            <path d="M24 28L32 20L40 28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+            <path d="M32 20V44" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+          </svg>
+        </div>
+        <h3>No recordings yet</h3>
+        <p>Upload your first recording to get started</p>
+      </div>
+
+      <!-- Recordings List -->
+      <div class="recordings-grid" id="recordings-grid"></div>
+    </section>
+
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
